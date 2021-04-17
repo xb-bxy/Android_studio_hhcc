@@ -28,19 +28,28 @@ public class BaseActivity extends AppCompatActivity {
     }
     public void navigateTo(Class cls){
         Intent in = new Intent(mContext,cls);
-        startActivityForResult(in,1);
-        finish();
+        startActivityForResult(in,0);
     }
     protected void saveStringKey(String key,String val){
         SharedPreferences sp = mContext.getSharedPreferences("sp_key",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(key, val);
         editor.commit();
+
+    }
+    protected void saveInt(String key,int val){
+        SharedPreferences sp = mContext.getSharedPreferences("sp_key",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(key, val);
+        editor.commit();
     }
     protected String getStringKey(String key){
         SharedPreferences sp = mContext.getSharedPreferences("sp_key",MODE_PRIVATE);
         return sp.getString(key,"");
     }
-
+    protected int getInt(String key){
+        SharedPreferences sp = mContext.getSharedPreferences("sp_key",MODE_PRIVATE);
+        return sp.getInt(key,6000000);
+    }
 
 }

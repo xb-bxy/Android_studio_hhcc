@@ -3,6 +3,7 @@ package com.keai.flower;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -116,6 +118,17 @@ public class MainActivity extends BaseActivity {
                 icon.draw(c);
             }
         }).attachToRecyclerView(recyclerView);
+        new Thread(() -> {
+            try {
+                while (true){
+                    Thread.sleep(getInt("update"));
+                    initFlowerList();
+                    Log.d("baiopop", "update");
+                }
+            } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        }).start();
     }
 
 
@@ -133,13 +146,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initClick() {
-        myAdapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, String name) {
-                Log.d("baiopop", "onItemClick: " + position + name);
-
-                alertDialog(position, name);
-            }
+        myAdapter.setOnItemClickListener((position, name) -> {
+            Log.d("baiopop", "onItemClick: " + position + name);
+            alertDialog(position, name);
         });
     }
 
@@ -159,6 +168,12 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        initFlowerList();
+        Log.d("baiopop", "onActivityResult:"+requestCode+","+resultCode+","+data);
+    }
 
     private void initFlowerList() {
         String api_key = getStringKey("api_key");
@@ -191,6 +206,7 @@ public class MainActivity extends BaseActivity {
             });
         } else {
             navigateTo(SettingsActivity.class);
+
         }
     }
 
