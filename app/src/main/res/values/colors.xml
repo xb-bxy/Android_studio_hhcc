@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red">#FFE91E63</color>
+    <color name="pick">#FFF569C6</color>
+    <color name="green">#FF8DD108</color>
+    <color name="yellow">#FFFEC44A</color>
+    <color name="blue">#FF346DF0</color>
+    <color name="write_blue">#FF2BCDF3</color>
+</resources>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:cardBackgroundColor="@color/green"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_CordTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/g1"
+                app:layout_constraintEnd_toStartOf="@+id/g8"
+                app:layout_constraintStart_toStartOf="@+id/g6"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="标题" />
+
+            <ImageView
+                android:id="@+id/img_Hum"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="TODO"
+                app:layout_constraintBottom_toTopOf="@+id/g3"
+                app:layout_constraintEnd_toStartOf="@+id/g8"
+                app:layout_constraintStart_toStartOf="@+id/g7"
+                app:layout_constraintTop_toTopOf="@+id/g1"
+                app:srcCompat="@mipmap/kqsd" />
+
+            <ImageView
+                android:id="@+id/img_Soil"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/g2"
+                app:layout_constraintEnd_toStartOf="@+id/g6"
+                app:layout_constraintStart_toStartOf="@+id/g4"
+                app:layout_constraintTop_toTopOf="@+id/g1"
+                app:srcCompat="@mipmap/trl30" />
+
+            <ImageView
+                android:id="@+id/img_Temp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/g2"
+                app:layout_constraintEnd_toStartOf="@+id/g8"
+                app:layout_constraintHorizontal_bias="0.6"
+                app:layout_constraintStart_toStartOf="@+id/g7"
+                app:layout_constraintTop_toTopOf="@+id/g3"
+                app:srcCompat="@mipmap/kqwd" />
+
+            <TextView
+                android:id="@+id/tv_Soil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/img_Soil"
+                app:layout_constraintEnd_toStartOf="@+id/g7"
+                app:layout_constraintHorizontal_bias="0.25"
+                app:layout_constraintStart_toStartOf="@+id/g6"
+                app:layout_constraintTop_toTopOf="@+id/img_Soil"
+                tools:text="100%" />
+
+            <TextView
+                android:id="@+id/tv_Temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/img_Temp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_Hum"
+                app:layout_constraintStart_toStartOf="@+id/tv_Hum"
+                app:layout_constraintTop_toTopOf="@+id/img_Temp"
+                tools:text="100%" />
+
+            <TextView
+                android:id="@+id/tv_Hum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/img_Hum"
+                app:layout_constraintEnd_toEndOf="@+id/tv_Temp"
+                app:layout_constraintEnd_toStartOf="@+id/g5"
+                app:layout_constraintHorizontal_bias="0.25"
+                app:layout_constraintStart_toEndOf="@+id/img_Hum"
+                app:layout_constraintTop_toTopOf="@+id/img_Hum"
+                tools:text="100%" />
+
+            <TextView
+                android:id="@+id/tv_UpdateTime"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center|end"
+                android:paddingTop="5dp"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/g5"
+                app:layout_constraintStart_toStartOf="@+id/g4"
+                app:layout_constraintTop_toTopOf="@+id/g2"
+                tools:text="更新时间：1970年01月01日 00:00:00" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.21" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.86" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.535" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.03" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.97" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.265" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.735" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.58" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
