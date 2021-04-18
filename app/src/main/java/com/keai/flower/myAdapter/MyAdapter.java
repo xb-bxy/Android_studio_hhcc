@@ -2,20 +2,14 @@ package com.keai.flower.myAdapter;
 
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -27,10 +21,8 @@ import com.keai.flower.R;
 import com.keai.flower.api.flowerData.FlowerData;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -50,26 +42,16 @@ public class MyAdapter extends ListAdapter<FlowerData.DataBean.MachineListBean,M
             @Override
             public boolean areContentsTheSame(@NonNull FlowerData.DataBean.MachineListBean oldItem, @NonNull FlowerData.DataBean.MachineListBean newItem) {
                 if (oldItem.getName()!=null){
-                    if (
-                            oldItem.getAh() == newItem.getAh()&&
-                                    oldItem.getAt()==newItem.getAt()&&
-                                    oldItem.getSm()==newItem.getSm()&&
-                                    oldItem.getName().equals(newItem.getName())&&
-                                    oldItem.getUp().equals(newItem.getUp())){
-                        return true;
-                    }else {
-                        return false;
-                    }
+                    return oldItem.getAh() == newItem.getAh() &&
+                            oldItem.getAt() == newItem.getAt() &&
+                            oldItem.getSm() == newItem.getSm() &&
+                            oldItem.getName().equals(newItem.getName()) &&
+                            oldItem.getUp().equals(newItem.getUp());
                 }else {
-                    if (
-                            oldItem.getAh() == newItem.getAh()&&
-                                    oldItem.getAt()==newItem.getAt()&&
-                                    oldItem.getSm()==newItem.getSm()&&
-                                    oldItem.getUp().equals(newItem.getUp())){
-                        return true;
-                    }else {
-                        return false;
-                    }
+                    return oldItem.getAh() == newItem.getAh() &&
+                            oldItem.getAt() == newItem.getAt() &&
+                            oldItem.getSm() == newItem.getSm() &&
+                            oldItem.getUp().equals(newItem.getUp());
                 }
 
 

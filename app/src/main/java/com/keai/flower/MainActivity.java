@@ -1,10 +1,9 @@
 package com.keai.flower;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.keai.flower.activity.BaseActivity;
 import com.keai.flower.activity.SettingsActivity;
 import com.keai.flower.api.Api;
@@ -56,21 +55,75 @@ public class MainActivity extends BaseActivity {
         myAdapter = new MyAdapter(this);
         recyclerView = findViewById(R.id.recyclerView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-
-            Log.d("baiopop", "onConfigurationChanged: 横屏");
-            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        }
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-            Log.d("baiopop", "onConfigurationChanged: 竖屏");
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        }
+        getConfiguration();
         swipeRefreshLayout.setOnRefreshListener(this::initFlowerList);
-
         initFlowerList();
         initClick();
         recyclerView.setAdapter(myAdapter);
+        initItemTouchHelper();
+        new Thread(new MyThread()).start();
+    }
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Log.d("baiopop", "onConfigurationChanged: 横屏");
+            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+        }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            Log.d("baiopop", "onConfigurationChanged: 竖屏");
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                navigateTo(SettingsActivity.class);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        initFlowerList();
+        Log.d("baiopop", "onActivityResult:"+requestCode+","+resultCode+","+data);
+    }
+
+    class MyThread implements Runnable{
+
+        @Override
+        public void run() {
+            try {
+                while (true){
+                    Thread.sleep(getInt("update"));
+                    initFlowerList();
+                    Log.d("baiopop", "update");
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void getConfiguration(){
+    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+
+        Log.d("baiopop", "onConfigurationChanged: 横屏");
+        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+    }
+    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+        Log.d("baiopop", "onConfigurationChanged: 竖屏");
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+}
+    private void initItemTouchHelper(){
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP|ItemTouchHelper.DOWN,ItemTouchHelper.START|ItemTouchHelper.END) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -82,8 +135,8 @@ public class MainActivity extends BaseActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 delDialog(viewHolder,viewHolder.getAdapterPosition());
             }
-            Drawable icon = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_baseline_delete_forever_24);
-            Drawable background =new ColorDrawable(Color.BLACK);
+            final Drawable icon = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_baseline_delete_forever_24);
+            final Drawable background =new ColorDrawable(Color.BLACK);
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -118,32 +171,14 @@ public class MainActivity extends BaseActivity {
                 icon.draw(c);
             }
         }).attachToRecyclerView(recyclerView);
-        new Thread(() -> {
-            try {
-                while (true){
-                    Thread.sleep(getInt("update"));
-                    initFlowerList();
-                    Log.d("baiopop", "update");
-                }
-            } catch (InterruptedException e) {
-            e.printStackTrace();
+
+    }
+    private void swipeRefreshLayoutStop(){
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
         }
-        }).start();
     }
 
-
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-       if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-           Log.d("baiopop", "onConfigurationChanged: 横屏");
-           recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-       }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-           Log.d("baiopop", "onConfigurationChanged: 竖屏");
-           recyclerView.setLayoutManager(new LinearLayoutManager(this));
-       }
-    }
 
     private void initClick() {
         myAdapter.setOnItemClickListener((position, name) -> {
@@ -151,30 +186,6 @@ public class MainActivity extends BaseActivity {
             alertDialog(position, name);
         });
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                navigateTo(SettingsActivity.class);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        initFlowerList();
-        Log.d("baiopop", "onActivityResult:"+requestCode+","+resultCode+","+data);
-    }
-
     private void initFlowerList() {
         String api_key = getStringKey("api_key");
         if (!StringUtils.isEmpty(api_key)) {
@@ -184,14 +195,19 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onSuccess(String res) {
                     runOnUiThread(() -> {
-                        FlowerData flowerData = new Gson().fromJson(res, FlowerData.class);
-                        if (flowerData != null && flowerData.getCode() == 0) {
-                            data = flowerData.getData().getMachine_list();
-                            myAdapter.submitList(data);
-                            if (swipeRefreshLayout.isRefreshing()) {
-                                swipeRefreshLayout.setRefreshing(false);
+                        try {
+                            FlowerData flowerData = new Gson().fromJson(res, FlowerData.class);
+                            if (flowerData != null && flowerData.getCode() == 0) {
+                                data = flowerData.getData().getMachine_list();
+                                myAdapter.submitList(data);
+                                swipeRefreshLayoutStop();
                             }
+                        }catch (JsonSyntaxException e){
+                            showToast("没有找到设备");
+                            Log.e("baiopop", "Exception: "+e);
+                            swipeRefreshLayoutStop();
                         }
+
                     });
 
                 }
@@ -199,9 +215,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onFailure(Exception e) {
                     e.printStackTrace();
-                    if (swipeRefreshLayout.isRefreshing()) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+                    swipeRefreshLayoutStop();
                 }
             });
         } else {
@@ -209,7 +223,6 @@ public class MainActivity extends BaseActivity {
 
         }
     }
-
     private void RenameFlowerList(int num, String name) {
         String api_key = getStringKey("api_key");
         HashMap<String, Object> params = new HashMap<>();
@@ -232,7 +245,6 @@ public class MainActivity extends BaseActivity {
         });
 
     }
-
     private void delFlowerList(int num) {
         String api_key = getStringKey("api_key");
         HashMap<String, Object> params = new HashMap<>();
@@ -252,49 +264,39 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
     public void alertDialog(int position, String name) {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // 设置标题
         builder.setTitle("设备名称："+name).
                 // 设置可选择的内容，并添加点击事件
-                        setItems(array, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // which代表的是选择的标签的序列号
-                        switch (which) {
-                            case 0:
-                                uNameDialog(position);
-                                break;
-                            case 1:
-                                delDialog(null,position);
-                                break;
-                        }
-                    }
-                }).
+                        setItems(array, (dialog, which) -> {
+                            // which代表的是选择的标签的序列号
+                            switch (which) {
+                                case 0:
+                                    uNameDialog(position);
+                                    break;
+                                case 1:
+                                    delDialog(null,position);
+                                    break;
+                            }
+                        }).
                 create().show();
 
     }
-
     public void uNameDialog(int position) {
 
         final EditText et = new EditText(this);
         new AlertDialog.Builder(this).
                 setTitle("输入新名称").
                 setView(et).
-                setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // 获取输入的字符
-                        String name = et.getText().toString();
-                        RenameFlowerList(position, name);
-                    }
+                setPositiveButton("确定", (dialog, which) -> {
+                    // 获取输入的字符
+                    String name = et.getText().toString();
+                    RenameFlowerList(position, name);
                 }).setNegativeButton("取消", null).setCancelable(false).create().show();
 
     }
-
     public void delDialog(RecyclerView.ViewHolder viewHolder,int position) {
         new AlertDialog.Builder(this).setTitle("提示").setMessage("您确定要删除设备吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
@@ -302,12 +304,9 @@ public class MainActivity extends BaseActivity {
                 myAdapter.notifyItemRemoved(position);
                 delFlowerList(position);
             }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (viewHolder != null){
-                    myAdapter.notifyDataSetChanged();
-                }
+        }).setNegativeButton("取消", (dialog, which) -> {
+            if (viewHolder != null){
+                myAdapter.notifyDataSetChanged();
             }
         }).setCancelable(false).create().show();
     }

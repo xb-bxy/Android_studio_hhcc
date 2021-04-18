@@ -1,10 +1,5 @@
 package com.keai.flower.api;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import com.keai.flower.R;
 
 public class Constants {
 
